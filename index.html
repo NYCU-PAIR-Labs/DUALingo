@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DUALingo: Dual-Hand Affordance Grounding on 3D Objects</title>
+  <meta name="description" content="DUALingo: a dual-hand, instruction-guided dataset for affordance grounding on 3D objects.">
+  <link rel="canonical" href="https://nycu-pair-labs.github.io/DUALingo/">
+  <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DUALingo: A Dual-Hand Instruction-Guided Dataset for Affordance Grounding on 3D Objects">
+  <meta property="og:description" content="271K free-form bimanual tasks on 71K 3D objects, each annotated as two cooperative roles with heatmaps on the object surface.">
+  <meta property="og:url" content="https://nycu-pair-labs.github.io/DUALingo/">
+  <meta property="og:image" content="https://nycu-pair-labs.github.io/DUALingo/static/images/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/style.css?v=20261125a">
+</head>
+<body>
+
+<header class="topnav" id="topnav">
+  <div class="wrap">
+    <a class="brand" href="#top">DUALingo</a>
+    <nav>
+      <a href="#abstract">Abstract</a>
+      <a href="#explore">Explore</a>
+      <a href="#dataset">Dataset</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#benchmark">Benchmark</a>
+      <a href="#robot">Manipulation</a>
+      <a href="#bibtex">BibTeX</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ===== title block ===== -->
+  <section class="hero">
+    <div class="wrap">
+      <h1><span class="name-a">DUAL</span><span class="name-b">ingo</span></h1>
+      <p class="subtitle">A Dual-Hand Instruction-Guided Dataset for Affordance Grounding on 3D Objects</p>
+
+      <div class="authors">
+        <span>Ming-Lun Lee<sup>1</sup></span>
+        <span>Yi-En Li<sup>2</sup></span>
+        <span>Feng-Dian Su<sup>2</sup></span>
+        <span>Ming-Han Lee<sup>2</sup></span>
+        <span>Kun-Ru Wu<sup>2</sup></span>
+        <span>Krzysztof Czarnecki<sup>1</sup></span>
+        <span>Yu-Chee Tseng<sup>2</sup></span>
+      </div>
+      <div class="affils">
+        <span><sup>1</sup>University of Waterloo</span>
+        <span><sup>2</sup>National Yang Ming Chiao Tung University</span>
+      </div>
+
+      <!-- Paper and arXiv: set href to the arXiv page once the ID is assigned, then drop "soon". Code and Dataset: at release. -->
+      <div class="links">
+        <a class="btn soon" href="#" title="Coming soon"><i class="fas fa-file-pdf"></i>Paper</a>
+        <a class="btn soon" href="#" title="Coming soon"><i class="ai ai-arxiv"></i>arXiv</a>
+        <a class="btn soon" href="#" title="Coming soon"><i class="fab fa-github"></i>Code</a>
+        <a class="btn soon" href="#" title="Coming soon"><i class="fas fa-database"></i>Dataset</a>
+        <a class="btn" href="#bibtex"><i class="fas fa-quote-right"></i>BibTeX</a>
+      </div>
+      <p class="tldr">
+        For each object and free-form task, <b>DUALingo</b> annotates <b>two cooperative roles</b>, each an action verb
+        with a heatmap on the object surface (<span class="legend"><span class="dot a"></span>role&nbsp;a</span>,
+        <span class="legend"><span class="dot b"></span>role&nbsp;b</span>).
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== teaser ===== -->
+  <section class="teaser">
+    <div class="wrap">
+      <img src="static/images/teaser.webp" alt="Thirty DUALingo objects, each with a free-form task and two role heatmaps: role a in orange, role b in green, with their action verbs." width="2520" height="1054">
+      <div class="stats">
+        <div class="stat"><b>71K</b><span>3D objects</span></div>
+        <div class="stat"><b>271K</b><span>free-form tasks</span></div>
+        <div class="stat"><b>542K</b><span>role heatmaps</span></div>
+        <div class="stat"><b>8</b><span>role verbs</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== abstract ===== -->
+  <section class="block" id="abstract">
+    <div class="wrap narrow abstract">
+      <h2 class="sec">Abstract</h2>
+      <p>
+        Affordance grounding localizes where an agent should interact with an object to perform a task.
+        Many everyday manipulation tasks, however, require <b>bimanual affordance</b>, in which two hands assume complementary and cooperative roles to accomplish a shared goal.
+        Existing 3D affordance datasets primarily ground single interaction regions, and manually annotating dual-hand, cooperative contacts does not scale.
+        To address this gap, we introduce <b>DUALingo</b>, a large-scale dataset for task-conditioned, role-aware bimanual 3D affordance grounding on diverse everyday objects.
+        DUALingo represents each task as two cooperative, hand-agnostic roles, each grounded as a heatmap on the object surface.
+        It contains 271K free-form tasks on 71K objects, generated by a fully automated pipeline of open-weight foundation models without human labeling.
+        Expert ratings and a validated LLM judge confirm the quality of the resulting annotations.
+        Trained on DUALingo, existing 3D affordance models learn to ground both cooperative roles from natural-language instructions, with the best-performing model achieving a <b>more than threefold improvement in aIoU over the zero-shot baseline</b>, from 10.3 to 37.8.
+        Robotic manipulation demonstrations illustrate the actionability of the predicted bimanual affordances in performing cooperative tasks.
+        These results position DUALingo as a scalable foundation for learning everyday bimanual affordances.
+        Dataset and code will be made publicly available.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== interactive explorer ===== -->
+  <section class="block band" id="explore">
+    <div class="wrap">
+      <h2 class="sec">Explore DUALingo in 3D</h2>
+
+      <div class="tabs" role="tablist">
+        <button class="on" data-set="annotations" role="tab">DUALingo annotations</button>
+        <button data-set="predictions" role="tab">Predictions on unseen objects</button>
+      </div>
+      <p class="footnote set-note"></p>
+
+      <div class="explorer">
+        <div class="stage" id="stage">
+          <div class="counter" id="counter"></div>
+          <div class="loading">loading…</div>
+        </div>
+        <aside class="panel">
+          <div class="panel-head"><h3 class="obj-name">&nbsp;</h3><div class="obj-meta"></div></div>
+          <div class="panel-body">
+            <div class="col"><h4>Tasks</h4><div class="task-list"></div></div>
+            <div class="col"><h4>Roles</h4><div class="roles"></div></div>
+          </div>
+        </aside>
+      </div>
+      <div class="strip" id="strip"></div>
+    </div>
+  </section>
+
+  <!-- ===== dataset ===== -->
+  <section class="block" id="dataset">
+    <div class="wrap">
+      <h2 class="sec">Dataset</h2>
+      <p class="sec-lead">271K free-form bimanual tasks on 71K objects, in three task families that differ in the level of abstraction of the instruction.</p>
+
+      <div class="families">
+        <div class="family">
+          <div class="fam-head"><h3>Object-level</h3><span class="share">38.7%</span></div>
+          <div class="bar"><span style="width:38.74%"></span></div>
+          <p>Manipulates the entire object as a single unit.</p>
+          <p class="eg">Move a chair · rotate a table · pick up a bucket</p>
+        </div>
+        <div class="family">
+          <div class="fam-head"><h3>Component-level</h3><span class="share">39.3%</span></div>
+          <div class="bar"><span style="width:39.30%"></span></div>
+          <p>Manipulates a specific component of the object.</p>
+          <p class="eg">Remove a lid · open a drawer · unscrew a cap</p>
+        </div>
+        <div class="family">
+          <div class="fam-head"><h3>Function-level</h3><span class="share">22.0%</span></div>
+          <div class="bar"><span style="width:21.95%"></span></div>
+          <p>Manipulates an object to achieve a high-level functional goal.</p>
+          <p class="eg">Open a book for reading · tilt a mug for drinking</p>
+        </div>
+      </div>
+
+      <figure class="fig" style="margin-top:36px">
+        <a href="static/images/diversity.png" target="_blank" rel="noopener"><img src="static/images/diversity.webp" alt="Treemap of DUALingo objects across 15 usage scenarios, and a table of manipulation task categories with occurrence counts." width="2800" height="1120" loading="lazy"></a>
+        <figcaption><b>Object and task distributions.</b> (a) Objects by usage scenario and category; rectangle areas show category proportions per scenario, and headings give object counts and dataset shares. (b) Task counts and percentages by category and sub-task.</figcaption>
+      </figure>
+
+      <h3 class="sub">Comparison with existing affordance datasets</h3>
+      <div class="tbl-wrap narrowtbl">
+        <table class="tbl">
+          <thead><tr><th>Dataset</th><th>3D</th><th>Free-form</th><th>Bimanual</th><th>Role-aware</th></tr></thead>
+          <tbody>
+            <tr><td>3D AffordanceNet <span class="src">CVPR 2021</span></td><td class="y">✓</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+            <tr><td>LASO <span class="src">CVPR 2024</span></td><td class="y">✓</td><td class="y">✓</td><td class="n">–</td><td class="n">–</td></tr>
+            <tr><td>Affogato <span class="src">ECCV 2026</span></td><td class="y">✓</td><td class="y">✓</td><td class="n">–</td><td class="n">–</td></tr>
+            <tr><td>DA<sup>2</sup> <span class="src">RA-L 2022</span></td><td class="y">✓</td><td class="n">–</td><td class="y">✓</td><td class="n">–</td></tr>
+            <tr><td>DualAfford <span class="src">ICLR 2023</span></td><td class="y">✓</td><td class="n">–</td><td class="y">✓</td><td class="n">–</td></tr>
+            <tr><td>2HANDS <span class="src">ICCV 2025</span></td><td class="n">–</td><td class="y">✓</td><td class="y">✓</td><td class="n">–</td></tr>
+            <tr><td>DHAGrasp <span class="src">arXiv 2025</span></td><td class="y">✓</td><td class="n">–</td><td class="y">✓</td><td class="n">–</td></tr>
+            <tr><td>BiPreManip <span class="src">CVPR 2026</span></td><td class="y">✓</td><td class="n">–</td><td class="y">✓</td><td class="n">–</td></tr>
+            <tr class="ours"><td>DUALingo <span class="src">Ours</span></td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="block band" id="pipeline">
+    <div class="wrap">
+      <h2 class="sec">Annotation Pipeline</h2>
+      <p class="sec-lead">Four stages, from rendered views of an object to a pair of 3D role heatmaps.</p>
+      <figure class="fig video-fig">
+        <video src="static/videos/pipeline.mp4" poster="static/videos/pipeline.jpg" controls muted playsinline preload="none" aria-label="The four stages of the DUALingo pipeline on a fire extinguisher: component curation, task generation and role decomposition, 2D points and masks in each view, and the fused pair of 3D role heatmaps."></video>
+        <figcaption>A walk-through of the four stages on the example of the pipeline figure below.</figcaption>
+      </figure>
+      <h3 class="sub">Pipeline overview</h3>
+      <figure class="fig">
+        <a href="static/images/pipeline.png" target="_blank" rel="noopener"><img src="static/images/pipeline.webp" alt="The DUALingo annotation pipeline in four stages: object and component-usage curation, multi-granular task generation and role decomposition, role-aware 2D grounding and segmentation, and role-consistent 3D heatmap construction." width="2800" height="1256" loading="lazy"></a>
+        <figcaption>Given the rendered views of a 3D object, foundation models curate its manipulable components, generate multi-granular bimanual tasks, and decompose each task into two cooperative roles. Both roles are then grounded and segmented in the 2D views and projected onto the point cloud as a pair of 3D heatmaps.</figcaption>
+      </figure>
+      <h3 class="sub">Annotation quality</h3>
+      <p class="sub-lead">Expert ratings and a validated LLM judge confirm the annotation quality.</p>
+      <div class="tbl-wrap narrowtbl">
+        <table class="tbl">
+          <thead><tr><th>Criterion</th><th>Human<br><span class="th-sub">1K</span></th><th>LLM<br><span class="th-sub">1K</span></th><th>LLM<br><span class="th-sub">all</span></th><th>AC1<br><span class="th-sub">J–E</span></th><th>AC1<br><span class="th-sub">E–E</span></th></tr></thead>
+          <tbody>
+            <tr><td>Task validity</td><td>94.1</td><td>93.3</td><td>92.5</td><td>0.82</td><td>0.81</td></tr>
+            <tr><td>Role validity</td><td>97.6</td><td>96.5</td><td>95.7</td><td>0.93</td><td>0.93</td></tr>
+            <tr><td>Heatmap quality</td><td>87.4</td><td>90.3</td><td>89.7</td><td>0.74</td><td>0.74</td></tr>
+          </tbody>
+        </table>
+          </div>
+      <p class="tbl-note narrownote">Human (1K) averages five expert ratings; LLM (1K) evaluates the same samples; LLM (all) evaluates the full corpus. Scores normalized to 0–100. AC1: Gwet's agreement between the judge and the experts (J–E) and among the experts (E–E).</p>
+    </div>
+  </section>
+
+  <section class="block" id="benchmark">
+    <div class="wrap">
+      <h2 class="sec">Benchmark</h2>
+      <p class="sec-lead">Trained on DUALingo, three 3D affordance models learn to ground both cooperative roles.</p>
+      <div class="tbl-wrap midtbl">
+            <table class="tbl">
+          <thead><tr><th>Method</th><th>aIoU ↑</th><th>AUC ↑</th><th>SIM ↑</th><th>MAE ↓</th><th>Role ↑</th></tr></thead>
+          <tbody>
+            <tr><td>OpenAD</td><td>3.9</td><td>50.4</td><td>37.9</td><td>0.332</td><td class="n">–</td></tr>
+            <tr class="dual"><td>Dual-OpenAD</td><td>25.4</td><td>70.4</td><td>53.7</td><td>0.275</td><td>73.1</td></tr>
+            <tr class="grp"><td>PointRefer</td><td>7.3</td><td>51.3</td><td>32.7</td><td>0.332</td><td class="n">–</td></tr>
+            <tr class="dual"><td>Dual-PointRefer</td><td>34.8</td><td>78.6</td><td>61.8</td><td>0.198</td><td><b>79.1</b></td></tr>
+            <tr class="grp"><td>Espresso-3D</td><td>10.3</td><td>53.7</td><td>39.8</td><td>0.331</td><td class="n">–</td></tr>
+            <tr class="dual"><td>Dual-Espresso-3D</td><td><b>37.8</b></td><td><b>79.5</b></td><td><b>62.8</b></td><td><b>0.191</b></td><td>78.8</td></tr>
+          </tbody>
+            </table>
+          </div>
+      <p class="tbl-note midnote">Original models are evaluated zero-shot; Dual models (shaded) are fine-tuned on DUALingo, averaged over three seeds. Best results in bold.</p>
+    </div>
+  </section>
+
+  <section class="block band" id="robot">
+    <div class="wrap">
+      <h2 class="sec">Bimanual Manipulation</h2>
+      <p class="sec-lead">Dual-Espresso-3D, trained on DUALingo, predicts the two roles on unseen objects from YCB, OakInk2, and PhysX-Mobility, and the predicted regions guide two Franka arms with scripted controllers in ManiSkill3. Videos play at 2× speed.</p>
+      <div class="grid-3">
+        <figure class="video-card">
+          <video src="static/videos/hammer.mp4" poster="static/videos/hammer.jpg" data-autoplay muted loop playsinline preload="none" aria-label="Two Franka arms lift a hammer at its predicted handle and head regions."></video>
+          <figcaption class="cap">
+            <div class="fam">Object-level</div>
+            <div class="task">Pick up the hammer</div>
+            <div class="verbs"><span class="va">lift</span><span class="sep">·</span><span class="vb">lift</span></div>
+          </figcaption>
+        </figure>
+        <figure class="video-card">
+          <video src="static/videos/laptop.mp4" poster="static/videos/laptop.jpg" data-autoplay muted loop playsinline preload="none" aria-label="One arm holds the laptop base while the other pulls the lid open."></video>
+          <figcaption class="cap">
+            <div class="fam">Component-level</div>
+            <div class="task">Open the laptop</div>
+            <div class="verbs"><span class="va">pull</span><span class="sep">·</span><span class="vb">hold</span></div>
+          </figcaption>
+        </figure>
+        <figure class="video-card">
+          <video src="static/videos/pan.mp4" poster="static/videos/pan.jpg" data-autoplay muted loop playsinline preload="none" aria-label="Two arms tilt a frying pan so the banana slides out."></video>
+          <figcaption class="cap">
+            <div class="fam">Function-level</div>
+            <div class="task">Tilt the frying pan to slide the food out</div>
+            <div class="verbs"><span class="va">rotate</span><span class="sep">·</span><span class="vb">hold</span></div>
+          </figcaption>
+        </figure>
+        <figure class="video-card">
+          <video src="static/videos/mustard.mp4" poster="static/videos/mustard.jpg" data-autoplay muted loop playsinline preload="none" aria-label="Two arms grasp a mustard bottle on opposite sides and lift it."></video>
+          <figcaption class="cap">
+            <div class="fam">Object-level</div>
+            <div class="task">Pick up the mustard bottle</div>
+            <div class="verbs"><span class="va">lift</span><span class="sep">·</span><span class="vb">lift</span></div>
+          </figcaption>
+        </figure>
+        <figure class="video-card">
+          <video src="static/videos/globe_spin.mp4" poster="static/videos/globe_spin.jpg" data-autoplay muted loop playsinline preload="none" aria-label="One arm holds the base of a globe while the other sweeps the sphere to spin it."></video>
+          <figcaption class="cap">
+            <div class="fam">Component-level</div>
+            <div class="task">Spin the globe</div>
+            <div class="verbs"><span class="va">rotate</span><span class="sep">·</span><span class="vb">hold</span></div>
+          </figcaption>
+        </figure>
+        <figure class="video-card">
+          <video src="static/videos/pot_lid.mp4" poster="static/videos/pot_lid.jpg" data-autoplay muted loop playsinline preload="none" aria-label="One arm holds the pot down while the other lifts its lid off."></video>
+          <figcaption class="cap">
+            <div class="fam">Component-level</div>
+            <div class="task">Open the lid of the pot</div>
+            <div class="verbs"><span class="va">pull</span><span class="sep">·</span><span class="vb">hold</span></div>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="bibtex">
+    <div class="wrap narrow">
+      <h2 class="sec">BibTeX</h2>
+      <div class="bib">
+<pre id="bib-text">@article{lee2026dualingo,
+  title   = {DUALingo: A Dual-Hand Instruction-Guided Dataset for
+             Affordance Grounding on 3D Objects},
+  author  = {Lee, Ming-Lun and Li, Yi-En and Su, Feng-Dian and Lee, Ming-Han
+             and Wu, Kun-Ru and Czarnecki, Krzysztof and Tseng, Yu-Chee},
+  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  year    = {2026}
+}</pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+
+<script src="static/vendor/three.min.js"></script>
+<script src="static/vendor/OrbitControls.js"></script>
+<script src="static/js/pointviewer.js?v=20261125a"></script>
+<script src="static/js/explorer.js?v=20261125a"></script>
+<script src="static/js/main.js?v=20261125a"></script>
+</body>
+</html>
