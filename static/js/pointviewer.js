@@ -254,6 +254,27 @@
       this.controls.addEventListener("end", () => {
         if (!this.calm) this._resume = setTimeout(() => (this.controls.autoRotate = true), 4000);
       });
+      // Touch screens: a finger on the stage scrolls the page until the visitor taps "Tap to rotate";
+      // "Done" hands the finger back to the page. (Disabled controls return before preventDefault.)
+      if (window.matchMedia && matchMedia("(pointer: coarse)").matches) {
+        const gate = document.createElement("button");
+        gate.type = "button";
+        gate.className = "touch-gate";
+        gate.textContent = "Tap to rotate";
+        const done = document.createElement("button");
+        done.type = "button";
+        done.className = "touch-done";
+        done.textContent = "Done";
+        const setTouch = (on) => {
+          this.controls.enabled = on;
+          gate.hidden = on;
+          done.hidden = !on;
+        };
+        gate.addEventListener("click", () => setTouch(true));
+        done.addEventListener("click", () => setTouch(false));
+        container.append(gate, done);
+        setTouch(false);
+      }
       new ResizeObserver(() => this.resize()).observe(container);
       this.resize();
       this._token = 0;
